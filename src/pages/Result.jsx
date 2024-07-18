@@ -1,8 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { IoMdRefresh, IoMdShareAlt } from "react-icons/io";
+import { mbtiResultDataList } from "../data/response";
+import { initialMbtiResultData } from "../data/initialState";
+import LoveIndex from "../components/LoveIndex";
 
-const Result = () => {
+const Result = ({ mbtiResultList }) => {
+  const [result, setResult] = useState(initialMbtiResultData); // ENFJ데이터
+
   // logic
+  useEffect(() => {
+    console.log("mbtiResultList", mbtiResultList);
+    const mbti = mbtiResultList
+      .map((item) =>
+        item.resultValue[item.firstType] > 1 ? item.firstType : item.lastType
+      )
+      .join(""); // 매개변수: 연결을 구분하는 separator
+    console.log("mbti", mbti);
+    mbti && setResult(mbtiResultDataList.find((data) => data.type === mbti));
+  }, [mbtiResultList]);
 
   // view
   return (
@@ -50,7 +65,7 @@ const Result = () => {
         <div className="relative px-8">
           <img src="./images/score.svg" alt="선재와 궁합 이미지 / tnv 제공" />
           <span className="absolute flex justify-center items-center inset-0 text-5xl text-mbti-light-blue font-cafe24surround mt-3">
-            90점
+            {result.score}점
             <i className="absolute bloock inset-0 bg-[url('../public/images/icon/main-icon-heart-small.png')] bg-no-repeat w-[29px] h-[28px] transform scale-50 top-2/4 left-2/3" />
           </span>
         </div>
@@ -58,54 +73,7 @@ const Result = () => {
       </div>
       <div className="py-4">
         {/* START: LoveIndex 컴포넌트 */}
-        <div className="px-4">
-          <ul>
-            {/* START: LoveIndex 요소 */}
-            <li className="flex gap-1 py-3 first:pt-0 last:pb-0">
-              <span className="text-base min-w-20 max-w-20">애정표현력</span>
-              <div className="w-full h-4 bg-mbti-light-pink rounded-r-xl overflow-hidden relative">
-                <span
-                  className="block h-full bg-mbti-pink transition-all"
-                  style={{ width: `70%` }}
-                ></span>
-              </div>
-            </li>
-            {/* END: LoveIndex 요소 */}
-            {/* START: LoveIndex 요소 */}
-            <li className="flex gap-1 py-3 first:pt-0 last:pb-0">
-              <span className="text-base min-w-20 max-w-20">눈치력</span>
-              <div className="w-full h-4 bg-mbti-light-pink rounded-r-xl overflow-hidden relative">
-                <span
-                  className="block h-full bg-mbti-pink transition-all"
-                  style={{ width: `50%` }}
-                ></span>
-              </div>
-            </li>
-            {/* END: LoveIndex 요소 */}
-            {/* START: LoveIndex 요소 */}
-            <li className="flex gap-1 py-3 first:pt-0 last:pb-0">
-              <span className="text-base min-w-20 max-w-20">썸 추진력</span>
-              <div className="w-full h-4 bg-mbti-light-pink rounded-r-xl overflow-hidden relative">
-                <span
-                  className="block h-full bg-mbti-pink transition-all"
-                  style={{ width: `80%` }}
-                ></span>
-              </div>
-            </li>
-            {/* END: LoveIndex 요소 */}
-            {/* START: LoveIndex 요소 */}
-            <li className="flex gap-1 py-3 first:pt-0 last:pb-0">
-              <span className="text-base min-w-20 max-w-20">19금력</span>
-              <div className="w-full h-4 bg-mbti-light-pink rounded-r-xl overflow-hidden relative">
-                <span
-                  className="block h-full bg-mbti-pink transition-all"
-                  style={{ width: `60%` }}
-                ></span>
-              </div>
-            </li>
-            {/* END: LoveIndex 요소 */}
-          </ul>
-        </div>
+        <LoveIndex list={result.loveIndexList} />
         {/* END: LoveIndex 컴포넌트 */}
       </div>
       <div className="py-4">
@@ -115,13 +83,7 @@ const Result = () => {
             <span className="block text-3xl font-minhye text-center py-4">
               선재랑 나는..
             </span>
-            <div className="text-sm font-pretendard">
-              선재의 특별함과 당신의 배려심이 만나면 아름다운 로맨스가 시작될
-              거예요. 당신의 사교력으로 선재의 인맥도 넓어질 수 있어요. 사소한
-              부분에서 의견 차이가 생길 수 있지만, 사랑으로 극복할 수 있을
-              거예요. 당신의 든든한 지지가 선재에게 큰 힘이 될 거예요. 함께
-              로맨틱한 추억을 많이 쌓을 수 있을 거예요.
-            </div>
+            <div className="text-sm font-pretendard">{result.text}</div>
           </div>
         </div>
         {/* END: ResultMessage 컴포넌트*/}
