@@ -6,7 +6,6 @@ const Answer = ({ data, onAnswerClick }) => {
 
   const handleClick = () => {
     onAnswerClick();
-    console.log("click");
   };
 
   // view
